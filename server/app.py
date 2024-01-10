@@ -4,7 +4,7 @@ from flask import make_response
 from models import db, Companies, Open_Positions, Contact, Linkedin
 
 
-@app.route("/companies", Method=["GET"])
+@app.route("/companies", methods=["GET"])
 def companies():
     companies = Companies.query.all()
 

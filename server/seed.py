@@ -56,4 +56,16 @@ if __name__ == '__main__':
                 position_title="Senior Platform Engineer",
                 salary_range="$175k - $205k"
             ),
+            Open_Positions(
+                company_id=companies[1].id,
+                hiring_contact=1,
+                position_title="Principal Software Engineer",
+                salary_range="$150k - $200k"
+            ),
+            Open_Positions(
+                company_id=companies[1].id,
+                hiring_contact=1,
+                position_title="Senior Software Engineer",
+                salary_range="$130k - $170k"
+            ),
         ]
