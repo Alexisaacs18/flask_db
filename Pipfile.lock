@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "d8c7efee3cfef96deb8b9a83613d7f2a88684d7c238003bb6b2fe0cd480c4b1d"
+            "sha256": "483dcfa8ad54d5682b81b90eda24ac6c333e2c2ce5d64d3da77bbca301c2e642"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -73,11 +73,11 @@
         },
         "flask-sqlalchemy": {
             "hashes": [
-                "sha256:2bda44b43e7cacb15d4e05ff3cc1f8bc97936cc464623424102bfc2c35e95912",
-                "sha256:f12c3d4cc5cc7fdcc148b9527ea05671718c3ea45d50c7e732cceb33f574b390"
+                "sha256:2764335f3c9d7ebdc9ed6044afaf98aae9fa50d7a074cef55dde307ec95903ec",
+                "sha256:add5750b2f9cd10512995261ee2aa23fab85bd5626061aa3c564b33bb4aa780a"
             ],
-            "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
-            "version": "==2.5.1"
+            "markers": "python_version >= '3.7'",
+            "version": "==3.0.3"
         },
         "importlib-metadata": {
             "hashes": [
