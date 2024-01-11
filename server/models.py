@@ -18,9 +18,27 @@ class Companies(db.Model, SerializerMixin):
     open_positions = db.relationship(
         "Open_Positions", back_populates="companies", cascade="all,delete")
 
-    @validates("companies")
-    def validate_company(self, key, val):
+    @validates("name")
+    def validate_name(self, key, val):
         if len(val) <= 0:
+            raise ValueError
+        elif not type(val) == str:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("amount_of_employees")
+    def validate_amount_of_employees(self, key, val):
+        if len(val) <= 0:
+            raise ValueError
+        elif not type(val) == str:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("total_open_positions")
+    def validate_total_open_positions(self, key, val):
+        if not type(val) == int:
             raise ValueError
         else:
             return val
@@ -39,6 +57,10 @@ class Open_Positions(db.Model, SerializerMixin):
 
     companies = db.relationship("Companies", back_populates="open_positions")
     contacts = db.relationship("Contact", back_populates="open_positions")
+
+    @validates("open_positions")
+    def validate_open_positions(self, key, val):
+        return val
 
 
 class Contact(db.Model, SerializerMixin):

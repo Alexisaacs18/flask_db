@@ -19,15 +19,15 @@ def companies():
         )
 
     elif request.method == "POST":
-
+            
         try:
 
             form_data = request.get_json()
 
             new_company = Companies(
-                name=form_data['name'],
-                amount_of_employees=form_data['amount_of_employees'],
-                total_open_positions=form_data['total_open_positions']
+                name = form_data['name'],
+                amount_of_employees = form_data['amount_of_employees'],
+                total_open_positions = form_data['total_open_positions']
             )
 
             db.session.add(new_company)
@@ -41,9 +41,9 @@ def companies():
         except ValueError:
 
             response = make_response(
-                {"Error": "Invalid Request"},
-                400
-            )
+                    {"Error": "Invalid Request"},
+                    400
+                )
 
     else:
 
@@ -55,12 +55,11 @@ def companies():
     return response
 
 
-@app.route("/open_positions", methods=["GET"])
+@app.route("/open_positions", methods=["GET", "POST"])
 def open_positions():
     open_positions = Open_Positions.query.all()
 
-    open_positions_dict = [open_position.to_dict()
-                           for open_position in open_positions]
+    open_positions_dict = [open_position.to_dict() for open_position in open_positions]
 
     response = make_response(
         open_positions_dict,
@@ -88,8 +87,7 @@ def contact():
 def linkedin():
     linkedin_for_contacts = Linkedin.query.all()
 
-    linkedin_dict = [contact_linkedin.to_dict()
-                     for contact_linkedin in linkedin_for_contacts]
+    linkedin_dict = [contact_linkedin.to_dict() for contact_linkedin in linkedin_for_contacts]
 
     response = make_response(
         linkedin_dict,
