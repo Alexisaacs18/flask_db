@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
 
 db = SQLAlchemy()
 
@@ -14,7 +15,15 @@ class Companies(db.Model, SerializerMixin):
     amount_of_employees = db.Column(db.String)
     total_open_positions = db.Column(db.Integer)
 
-    open_positions = db.relationship("Open_Positions", back_populates = "companies", cascade = "all,delete")
+    open_positions = db.relationship(
+        "Open_Positions", back_populates="companies", cascade="all,delete")
+
+    @validates("companies")
+    def validate_company(self, key, val):
+        if len(val) <= 0:
+            raise ValueError
+        else:
+            return val
 
 
 class Open_Positions(db.Model, SerializerMixin):
@@ -28,8 +37,8 @@ class Open_Positions(db.Model, SerializerMixin):
     position_title = db.Column(db.String)
     salary_range = db.Column(db.String)
 
-    companies = db.relationship("Companies", back_populates = "open_positions")
-    contacts = db.relationship("Contact", back_populates = "open_positions")
+    companies = db.relationship("Companies", back_populates="open_positions")
+    contacts = db.relationship("Contact", back_populates="open_positions")
 
 
 class Contact(db.Model, SerializerMixin):
@@ -42,8 +51,9 @@ class Contact(db.Model, SerializerMixin):
     name = db.Column(db.String)
     position = db.Column(db.String)
 
-    open_positions = db.relationship("Open_Positions", back_populates = "contacts", cascade = "all,delete")
-    linkedin = db.relationship("Linkedin", back_populates = "contacts")
+    open_positions = db.relationship(
+        "Open_Positions", back_populates="contacts", cascade="all,delete")
+    linkedin = db.relationship("Linkedin", back_populates="contacts")
 
 
 class Linkedin(db.Model, SerializerMixin):
@@ -55,4 +65,5 @@ class Linkedin(db.Model, SerializerMixin):
     url = db.Column(db.String, nullable=False)
     length_of_position = db.Column(db.String)
 
-    contacts = db.relationship("Contact", back_populates = "linkedin", cascade = "all,delete")
+    contacts = db.relationship(
+        "Contact", back_populates="linkedin", cascade="all,delete")
