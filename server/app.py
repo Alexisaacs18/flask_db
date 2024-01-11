@@ -107,16 +107,52 @@ def open_positions():
     return response
 
 
-@app.route("/contacts", methods=["GET"])
+@app.route("/contacts", methods=["GET", "POST"])
 def contact():
-    contacts = Contact.query.all()
+    
+    if request.method == "GET":
 
-    contacts_dict = [contact.to_dict(rules = ("-open_positions", "-linkedin")) for contact in contacts]
+        contacts = Contact.query.all()
 
-    response = make_response(
-        contacts_dict,
-        200
-    )
+        contacts_dict = [contact.to_dict(rules = ("-open_positions", "-linkedin")) for contact in contacts]
+
+        response = make_response(
+            contacts_dict,
+            200
+        )
+
+    elif request.method == "POST":
+
+        try:
+
+            form_data = request.get_json()
+
+            new_contact = Contact(
+                linkedin_id = form_data["linkedin_id"],
+                name = form_data["name"],
+                position = form_data["position"]
+            )
+
+            db.session.add(new_contact)
+            db.session.commit()
+
+            response = make_response(
+                new_contact.to_dict(),
+                201
+            )
+
+        except ValueError:
+
+            response = make_response(
+                {"Error" : "Invalid Format"},
+                400
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid Method"}
+        )
 
     return response
 

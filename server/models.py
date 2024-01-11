@@ -103,6 +103,31 @@ class Contact(db.Model, SerializerMixin):
     open_positions = db.relationship("Open_Positions", back_populates="contacts", cascade="all,delete")
     linkedin = db.relationship("Linkedin", back_populates="contacts")
 
+    @validates("linkedin_id")
+    def validate_linkedin_id(self, key, val):
+        if not type(val) == int:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("name")
+    def validate_name(self, key, val):
+        if not type(val) == str:
+            raise ValueError
+        elif len(val) <= 0:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("positions")
+    def validate_position(self, key, val):
+        if not type(val) == str:
+            raise ValueError
+        if len(val) <= 0:
+            raise ValueError
+        else:
+            return val
+
 
 class Linkedin(db.Model, SerializerMixin):
     __tablename__ = "linkedin"
