@@ -11,7 +11,7 @@ def companies():
 
         companies = Companies.query.all()
 
-        companies_dict = [company.to_dict() for company in companies]
+        companies_dict = [company.to_dict(rules = ("-open_positions", )) for company in companies]
 
         response = make_response(
             companies_dict,
@@ -55,11 +55,11 @@ def companies():
     return response
 
 
-@app.route("/open_positions", methods=["GET", "POST"])
+@app.route("/open_positions", methods=["GET"])
 def open_positions():
     open_positions = Open_Positions.query.all()
 
-    open_positions_dict = [open_position.to_dict() for open_position in open_positions]
+    open_positions_dict = [open_position.to_dict(rules = ("-contacts", "-companies")) for open_position in open_positions]
 
     response = make_response(
         open_positions_dict,
@@ -73,7 +73,7 @@ def open_positions():
 def contact():
     contacts = Contact.query.all()
 
-    contacts_dict = [contact.to_dict() for contact in contacts]
+    contacts_dict = [contact.to_dict(rules = ("-open_positions", "-linkedin")) for contact in contacts]
 
     response = make_response(
         contacts_dict,

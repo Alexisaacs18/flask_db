@@ -15,8 +15,7 @@ class Companies(db.Model, SerializerMixin):
     amount_of_employees = db.Column(db.String)
     total_open_positions = db.Column(db.Integer)
 
-    open_positions = db.relationship(
-        "Open_Positions", back_populates="companies", cascade="all,delete")
+    open_positions = db.relationship("Open_Positions", back_populates="companies", cascade="all,delete")
 
     @validates("name")
     def validate_name(self, key, val):
@@ -73,8 +72,7 @@ class Contact(db.Model, SerializerMixin):
     name = db.Column(db.String)
     position = db.Column(db.String)
 
-    open_positions = db.relationship(
-        "Open_Positions", back_populates="contacts", cascade="all,delete")
+    open_positions = db.relationship("Open_Positions", back_populates="contacts", cascade="all,delete")
     linkedin = db.relationship("Linkedin", back_populates="contacts")
 
 
@@ -87,5 +85,4 @@ class Linkedin(db.Model, SerializerMixin):
     url = db.Column(db.String, nullable=False)
     length_of_position = db.Column(db.String)
 
-    contacts = db.relationship(
-        "Contact", back_populates="linkedin", cascade="all,delete")
+    contacts = db.relationship("Contact", back_populates="linkedin", cascade="all,delete")
