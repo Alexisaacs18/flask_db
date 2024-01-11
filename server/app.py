@@ -55,16 +55,54 @@ def companies():
     return response
 
 
-@app.route("/open_positions", methods=["GET"])
+@app.route("/open_positions", methods=["GET", "POST"])
 def open_positions():
-    open_positions = Open_Positions.query.all()
 
-    open_positions_dict = [open_position.to_dict(rules = ("-contacts", "-companies")) for open_position in open_positions]
+    if request.method == "GET":
 
-    response = make_response(
-        open_positions_dict,
-        200
-    )
+        open_positions = Open_Positions.query.all()
+
+        open_positions_dict = [open_position.to_dict(rules = ("-contacts", "-companies")) for open_position in open_positions]
+
+        response = make_response(
+            open_positions_dict,
+            200
+        )
+
+    elif request.method == "POST":
+
+        try:
+
+            form_data = request.get_json()
+
+            new_open_positions = Open_Positions(
+                company_id = form_data["company_id"],
+                hiring_contact = form_data["hiring_contact"],
+                position_title = form_data["position_title"],
+                salary_range = form_data["salary_range"]
+            )
+
+            db.session.add(new_open_positions)
+            db.session.commit()
+
+            response = make_response(
+                new_open_positions.to_dict(),
+                201
+            )
+
+        except ValueError:
+
+            response = make_response(
+                {"Error" : "Invalid Value"},
+                400
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid Method"},
+            400
+        )
 
     return response
 
@@ -146,6 +184,61 @@ def companies_id(id):
         )
 
     return response
+
+@app.route("/open_positions/<int:id>", methods={"GET", "PATCH", "DELETE"})
+def open_position_id(id):
+    open_position_id = Open_Positions.query.filter(Open_Positions.id == id).first()
+
+    if open_position_id:
+        if request.method == "GET":
+
+            response = make_response(
+                open_position_id.to_dict(),
+                200
+            )
+
+        elif request.method == "PATCH":
+
+            try:
+            
+                form_data = request.get_json()
+
+                for key in form_data:
+                    setattr(open_position_id, key, form_data[key])
+
+                db.session.commit()
+
+                response = make_response(
+                    open_position_id.to_dict(),
+                    201
+                )
+
+            except ValueError:
+
+                response = make_response(
+                    {"Error" : "Invalid format"},
+                    400
+                )
+
+        elif request.method == "DELETE":
+
+            db.session.delete(open_position_id)
+            db.session.commit()
+
+            response = make_response(
+                {},
+                202
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid ID"},
+            404
+        )
+
+    return response
+
 
 
 if __name__ == '__main__':

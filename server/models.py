@@ -57,9 +57,37 @@ class Open_Positions(db.Model, SerializerMixin):
     companies = db.relationship("Companies", back_populates="open_positions")
     contacts = db.relationship("Contact", back_populates="open_positions")
 
-    @validates("open_positions")
-    def validate_open_positions(self, key, val):
-        return val
+    @validates("company_id")
+    def validate_company_id(self, key, val):
+        if not type(val) == int:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("hiring_contact")
+    def validate_hiring_contact(self, key, val):
+        if not type(val) == int:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("position_title")
+    def validate_position_title(self, key, val):
+        if len(val) <= 0:
+            raise ValueError
+        elif not type(val) == str:
+            raise ValueError
+        else:
+            return val
+        
+    @validates("salary_range")
+    def validate_salary_range(self, key, val):
+        if len(val) <= 0:
+            raise ValueError
+        if not type(val) == str:
+            raise ValueError
+        else:
+            return val
 
 
 class Contact(db.Model, SerializerMixin):
