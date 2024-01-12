@@ -157,16 +157,52 @@ def contact():
     return response
 
 
-@app.route("/linkedin", methods=["GET"])
+@app.route("/linkedin", methods=["GET", "POST"])
 def linkedin():
-    linkedin_for_contacts = Linkedin.query.all()
 
-    linkedin_dict = [contact_linkedin.to_dict() for contact_linkedin in linkedin_for_contacts]
+    if request.method == "GET":
 
-    response = make_response(
-        linkedin_dict,
-        200
-    )
+        linkedin_for_contacts = Linkedin.query.all()
+
+        linkedin_dict = [contact_linkedin.to_dict() for contact_linkedin in linkedin_for_contacts]
+
+        response = make_response(
+            linkedin_dict,
+            200
+        )
+
+    elif request.method == "POST":
+            
+        try:
+
+            form_data = request.get_json()
+
+            new_linkedin = Linkedin(
+                url = form_data["url"],
+                length_of_position = form_data["length_of_position"]
+            )
+
+            db.session.add(new_linkedin)
+            db.session.commit()
+
+            response = make_response(
+                new_linkedin.to_dict(),
+                201
+            )
+
+        except ValueError:
+
+            response = make_response(
+                {"Error" : "Invalid Format"},
+                400
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid Method"},
+            400
+        )
 
     return response
 
@@ -259,6 +295,114 @@ def open_position_id(id):
         elif request.method == "DELETE":
 
             db.session.delete(open_position_id)
+            db.session.commit()
+
+            response = make_response(
+                {},
+                202
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid ID"},
+            404
+        )
+
+    return response
+
+@app.route("/contacts/<int:id>", methods={"GET", "PATCH", "DELETE"})
+def contact_id(id):
+    contact_id = Contact.query.filter(Contact.id == id).first()
+
+    if contact_id:
+        if request.method == "GET":
+
+            response = make_response(
+                contact_id.to_dict(),
+                200
+            )
+
+        elif request.method == "PATCH":
+
+            try:
+            
+                form_data = request.get_json()
+
+                for key in form_data:
+                    setattr(contact_id, key, form_data[key])
+
+                db.session.commit()
+
+                response = make_response(
+                    contact_id.to_dict(),
+                    201
+                )
+
+            except ValueError:
+
+                response = make_response(
+                    {"Error" : "Invalid format"},
+                    400
+                )
+
+        elif request.method == "DELETE":
+
+            db.session.delete(contact_id)
+            db.session.commit()
+
+            response = make_response(
+                {},
+                202
+            )
+
+    else:
+
+        response = make_response(
+            {"Error" : "Invalid ID"},
+            404
+        )
+
+    return response
+
+@app.route("/linkedin/<int:id>", methods={"GET", "PATCH", "DELETE"})
+def linkedin_id(id):
+    linkedin_id = Linkedin.query.filter(Linkedin.id == id).first()
+
+    if linkedin_id:
+        if request.method == "GET":
+
+            response = make_response(
+                linkedin_id.to_dict(),
+                200
+            )
+
+        elif request.method == "PATCH":
+
+            try:
+            
+                form_data = request.get_json()
+
+                for key in form_data:
+                    setattr(linkedin_id, key, form_data[key])
+
+                db.session.commit()
+
+                response = make_response(
+                    linkedin_id.to_dict(),
+                    201
+                )
+
+            except ValueError:
+
+                response = make_response(
+                    {"Error" : "Invalid format"},
+                    400
+                )
+
+        elif request.method == "DELETE":
+
+            db.session.delete(linkedin_id)
             db.session.commit()
 
             response = make_response(

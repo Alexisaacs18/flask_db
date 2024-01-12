@@ -139,3 +139,21 @@ class Linkedin(db.Model, SerializerMixin):
     length_of_position = db.Column(db.String)
 
     contacts = db.relationship("Contact", back_populates="linkedin", cascade="all,delete")
+
+    @validates("url")
+    def validate_url(self, key, val):
+        if not type(val) == str:
+            raise TypeError
+        elif len(val) <= 0:
+            raise TypeError
+        else:
+            return val
+
+    @validates("length_of_position")
+    def validate_length_of_position(self, key, val):
+        if not type(val) == str:
+            raise ValueError
+        elif len(val) <= 0:
+            raise TypeError
+        else:
+            return val
